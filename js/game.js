@@ -543,7 +543,7 @@ var addPlanet = function ( type, x, y, r, flags )
             obj.mass = 20*r*r;
             break;
         case B_HOLE:
-            obj.mass = 250*r*r;
+            obj.mass = 175*r*r;
             break;
         default:
             break;
