@@ -66,3 +66,48 @@ body > canvas {
 	color: #e0e0e0;
 	cursor: pointer;
 }
+
+.message {
+	background: rgba(0,0,0,0.75);
+	color: #e0e0e0;
+	border: 4px solid #101080;
+
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 200px;
+	height: 100px;
+	margin-left: -100px;
+	margin-top: -50px;
+
+	text-align: center;
+	font-size: 25px;
+
+	padding-top: 15px;
+
+	z-index: 10000000;
+}
+
+.message.destroyed {
+	color: #e02020;
+}
+
+.message.success {
+	color: #20e020;
+}
+
+.message > span.button {
+	background: #202070;
+	color: #e0e0e0;
+	padding: 5px;
+	font-size: 15px;
+	text-align: center;
+	cursor: pointer;
+	width: 200px;
+}
+
+.message > span.button:hover {
+	background: #2020a0;
+	color: #e0e0e0;
+	cursor: pointer;
+}

@@ -82,6 +82,8 @@ GAME.Init = function ( )
 
 var initLevel = function (no)
 {
+    $('.message').remove();
+
     if (!no)
         no = levelNo;
     levelNo = no;
@@ -99,18 +101,58 @@ var initLevel = function (no)
     switch (levelNo)
     {
         case 1:
+            addPlanet(M_CLASS, 400, 400, 40, [-Math.PI/2]);
+            initShip(400, 100, 6);
+            fuel = 15;
+            break;
+        case 2:
             addPlanet(M_CLASS, 400, 400, 40, [Math.PI/2]);
             initShip(400, 100, 6);
             fuel = 15;
             break;
-        case 666:
+        case 3:
+            addPlanet(M_CLASS, 300, 500, 20, [0]);
+            addPlanet(M_CLASS, 500, 300, 40, [Math.PI/2]);
+            initShip(400, 100, 6);
+            fuel = 15;
+            break;
+        case 4:
+            addPlanet(J_CLASS, 400, 400, 80, [0]);
+            addPlanet(M_CLASS, 200, 200, 20, [0]);
+            addPlanet(M_CLASS, 600, 200, 20, [-Math.PI]);
+            initShip(400, 100, 6);
+            fuel = 10;
+            break;
+        case 5:
+            addPlanet(B_HOLE, 400, 400, 30);
+            addPlanet(M_CLASS, 200, 600, 20, [0]);
+            addPlanet(M_CLASS, 600, 600, 20, [-Math.PI]);
+            initShip(400, 100, 6);
+            fuel = 15;
+            break;
+        case 6:
+            addPlanet(M_CLASS, 400, 400, 40, [0, Math.PI]);
+            addPlanet(B_HOLE, 200, 400, 20);
+            addPlanet(B_HOLE, 600, 400, 20);
+            addPlanet(B_HOLE, 400, 200, 20);
+            addPlanet(B_HOLE, 400, 600, 20);
+            initShip(400, 500, 6);
+            fuel = 10;
+            break;
+        case 7:
             addPlanet(M_CLASS, 400, 400, 40, [0]);
             addPlanet(M_CLASS, 600, 300, 20, [Math.PI/3]);
-            addPlanet(J_CLASS, 200, 600, 85);
+            addPlanet(J_CLASS, 200, 600, 85, [Math.PI/4]);
             addPlanet(B_HOLE, 600, 500, 20, [Math.PI]);
             initShip(400, 50, 6);
+            fuel = 20;
             break;
     };   
+
+    winTime = null;
+    won = false;
+    lost = false;
+    initFuel = fuel;
 };
 
 var ROTMULT_FLIPH = 1;
@@ -289,6 +331,7 @@ var updateRenderShip = function ( ctx, delta )
 
         if (speed > 50 || PLd2 < 0 || Math.abs(angle) > Math.PI/4)
         {
+            GAME.world.DestroyBody(ship.body);
             ship = null;
             for (var i=0; i<100; i++)
             {
@@ -576,6 +619,10 @@ GAME.Update = function ( )
 
 var lhud = "";
 
+var winTime = null;
+var won = false;
+var lost = false;
+
 GAME.render = function ( delta, realDelta )
 {
     // Render
@@ -589,6 +636,29 @@ GAME.render = function ( delta, realDelta )
     updateRenderDust(ctx, delta);
     updateRenderShip(ctx, delta);
     renderPlanets(ctx, delta);
+
+    if (!ship && !won && !lost)
+    {
+        lost = true;
+        $('<div class="message destroyed">Destroyed...<br><br><span class="button" id="reset2">Try again</span></div>').appendTo($(document.body));
+        $('#reset2').click(function(){
+            initLevel();
+        });
+    }
+
+    if (!lost && flagCount <= 0 && !won)
+    {
+        if (!winTime)
+            winTime = ctime() + 3;
+        else if (winTime <= ctime())
+        {
+            won = true;
+            $('<div class="message success">Success!<br>Fuel used: ' + (Math.floor((initFuel - fuel)*100) / 100) + 's<br><span class="button" id="next_level">Next level</span></div>').appendTo($(document.body));
+            $('#next_level').click(function(){
+                initLevel(levelNo+1);
+            });
+        }
+    }
 
     var hud = '<span ' + (fuel < 5 ? 'class="low"' : '') + '>Fuel: <span>' + (Math.floor(fuel * 10) / 10) + 's</span></span><span ' + (flagCount < 2 ? 'class="close"' : '') + '>Flags left: <span>' + flagCount + '</span></span><span>Level: <span>' + levelNo + '</span></span><span class="button" id="reset">Reset</span>';
 
