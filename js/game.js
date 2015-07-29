@@ -44,16 +44,29 @@ GAME.Init = function ( )
     var game = GAME.game = new Phaser.Game(GAME.W, GAME.H, Phaser.AUTO, '', {
         preload: function () {
 
-            //game.load.audio('background', ['sfx/background.mp3', 'sfx/background.ogg']);
+            game.load.audio('background', ['sfx/background.mp3', 'sfx/background.ogg']);
+            game.load.audio('engine', ['sfx/engine.mp3', 'sfx/engine.ogg']);
+            game.load.audio('bump', ['sfx/bump.mp3', 'sfx/bump.ogg']);
+            game.load.audio('explosion', ['sfx/explosion.mp3', 'sfx/explosion.ogg']);
+            game.load.audio('flag', ['sfx/win.mp3', 'sfx/win.ogg']);
+            game.load.audio('win', ['sfx/win-2.mp3', 'sfx/win-2.ogg']);
 
         },
         create: function () {
 
             setBuffer();
 
-            //SFX.background = game.add.audio('background');
-            //SFX.background.volume = 0.1;
-            //SFX.background.play();
+            SFX.background = game.add.audio('background');
+            SFX.background.volume = 0.5;
+            SFX.background.play();
+            SFX.flag = game.add.audio('flag');
+            SFX.win = game.add.audio('win');
+            SFX.explosion = game.add.audio('explosion');
+            SFX.bump = game.add.audio('bump');
+            SFX.engine = game.add.audio('engine');
+            SFX.engine.volume = 0.0;
+            SFX.engine.play();
+
         },
         update: GAME.Update
     });
@@ -252,6 +265,8 @@ var updateRenderShip = function ( ctx, delta )
             var d2 = (FL.x - X) * (FL.x - X) + (FL.y - Y) * (FL.y - Y);
             if (d2 < (FL.r+ship.r)*(FL.r+ship.r))
             {
+                SFX.flag.volume = 0.5;
+                SFX.flag.play();
                 flagCount -= 1;
                 planets[i].flags.splice(j, 1);
                 j --;
@@ -278,6 +293,8 @@ var updateRenderShip = function ( ctx, delta )
 
         fuel -= F/50 * delta;
 
+        SFX.engine.volume = F/50 * 0.25;
+
         imp.set_x(imp.get_x() + Math.cos(A-Math.PI/2) * F);
         imp.set_y(imp.get_y() + Math.sin(A-Math.PI/2) * F);
         if (Math.random() < ((GAME.game.input.mouse.button & 2) ? 0.2 : 0.6))
@@ -292,6 +309,8 @@ var updateRenderShip = function ( ctx, delta )
             });
         }
     }
+    else
+        SFX.engine.volume = 0.0;
     if (fuel < 0) fuel = 0;
     ship.body.ApplyLinearImpulse(imp, P);
     bfree(imp);
@@ -317,6 +336,12 @@ var updateRenderShip = function ( ctx, delta )
             PL = planets[i];
             PLd2 = d2;
         }
+    }
+
+    if (ship.contact && !SFX.bump.isPlaying)
+    {
+        SFX.bump.volume = ship.lspeed / 75;
+        SFX.bump.play();
     }
 
     if (ship.contact || PLd2 < 0)
@@ -346,6 +371,8 @@ var updateRenderShip = function ( ctx, delta )
                     inv: true
                 });
             }
+            SFX.explosion.play();
+            SFX.engine.volume = 0.0;
             return;
         }
     }
@@ -652,6 +679,9 @@ GAME.render = function ( delta, realDelta )
             winTime = ctime() + 3;
         else if (winTime <= ctime())
         {
+            SFX.win.volume = 0.5;
+            SFX.win.play();
+
             won = true;
             $('<div class="message success">Success!<br>Fuel used: ' + (Math.floor((initFuel - fuel)*100) / 100) + 's<br><span class="button" id="next_level">Next level</span></div>').appendTo($(document.body));
             $('#next_level').click(function(){
@@ -671,7 +701,8 @@ GAME.render = function ( delta, realDelta )
         lhud = hud;
     }
 
-    // Loop background sound
-    //if (!SFX.background.isPlaying)
-    //    SFX.background.play();
+    if (!SFX.engine.isPlaying)
+        SFX.engine.play();
+    if (!SFX.background.isPlaying)
+        SFX.background.play();
 };
