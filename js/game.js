@@ -90,7 +90,68 @@ GAME.Init = function ( )
 
     Math.seedrandom(666);
 
+    setScore(1, 1000);
+
+    updateScores();
+
+    levelNo = 1;
+    while (getScore(levelNo) < 999.5)
+        levelNo ++;
+    if (levelNo > 10)
+        levelNo = 10;
+
     initLevel(levelNo);
+};
+
+var getScore = function (level)
+{
+    var key = 'levelScore' + level;
+    if (!localStorage[key])
+        return '1000000';
+    else
+        return localStorage[key];
+};
+
+var setScore = function (level, score)
+{
+    if (!Storage)
+        return false;
+    var key = 'levelScore' + level;
+    if (!localStorage[key])
+        localStorage[key] = "1000000";
+    if (Number(score) < Number(localStorage[key]))
+    {
+        localStorage[key] = score;
+        return true;
+    }
+    else
+        return false;
+};
+
+var updateScores = function ()
+{
+    var html = '';
+    for (var i=1; i<=10; i++)
+    {
+        var s = getScore(i);
+        html += '<span>L. ' + i + '</span>';
+        html += '<span>';
+        if (s > 999.5)
+            html += '---';
+        else
+            html += s + 's';
+        html += '</span>';
+        if (s < 1000.5)
+            html += '<span class="button" id="play_level_' + i + '">Play</span>';
+        html += '<br>';
+    }
+    $('#scores').html(html);
+    for (var i=1; i<=10; i++)
+        $('#play_level_' + i).click(function(level){
+            return function(){
+                initLevel(level);
+            };
+        }(i));
 };
 
 var initLevel = function (no)
@@ -704,8 +765,12 @@ GAME.render = function ( delta, realDelta )
             SFX.win.volume = 0.5;
             SFX.win.play();
 
+            var hs = setScore(levelNo, "" + (Math.floor((initFuel - fuel)*100) / 100));
+            setScore(levelNo+1, "" + 1000);
+            updateScores();
+
             won = true;
-            $('<div class="message success">Success!<br>Fuel used: ' + (Math.floor((initFuel - fuel)*100) / 100) + 's<br>' + (levelNo < 10 ? '<span class="button" id="next_level">Next level</span></div>' : '')).appendTo($(document.body));
+            $('<div class="message success">Success! ' + (hs ? 'Highscore!' : '') + '<br>Fuel used: ' + (Math.floor((initFuel - fuel)*100) / 100) + 's<br>' + (levelNo < 10 ? '<span class="button" id="next_level">Next level</span></div>' : '')).appendTo($(document.body));
             if (levelNo < 10)
             {
                 $('#next_level').click(function(){
