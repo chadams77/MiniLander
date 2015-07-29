@@ -1,0 +1,68 @@
+body, html {
+    margin: 0;
+    padding: 0px;
+    background-color: black;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+canvas {
+	cursor: default;
+}
+
+body > canvas {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -400px;
+	margin-top: -400px;
+}
+
+#hud {
+	position: absolute;
+	display: block;
+	left: 50%;
+	top: 50%;
+	margin-left: -400px;
+	margin-top: -430px;
+	font-size: 20px;
+	color: #b0b0b0;
+}
+
+#hud > span {
+	display: inline-block;
+	width: 198px;
+}
+
+#hud > span > span {
+	color: #efefef;
+}
+
+#hud > span.low, #hud > span.low > span {
+	color: #b00000;
+}
+
+#hud > span.close, #hud > span.close > span {
+	color: #00b000;
+}
+
+#hud > span.button {
+	background: #202070;
+	color: #e0e0e0;
+	padding: 5px;
+	font-size: 15px;
+	text-align: center;
+	cursor: pointer;
+}
+
+#hud > span.button:hover {
+	background: #2020a0;
+	color: #e0e0e0;
+	cursor: pointer;
+}

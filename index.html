@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>MiniLander</title>
+        <link rel="stylesheet" type="text/css" href="css/game.css">
+        <script src="js/Box2D_v2.3.1_min.js"></script>
+        <script src="js/jquery-1.11.1.min.js"></script>
+        <script src="js/phaser.min.js"></script>
+        <script src="js/seedrandom.js"></script>
+        <script src="js/game.js"></script>
+    </head>
+    <script language="javascript">
+        document.onmousedown = function( event )
+        {
+            if(event.button==2)
+            {
+                return false;    
+            }
+        }
+    </script>
+    <body oncontextmenu='return false;'>
+        <script>
+            $(document).ready(GAME.Init);
+        </script>
+        <div id='hud'></div>
+    </body>
+</html>
