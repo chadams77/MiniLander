@@ -34,7 +34,8 @@ body > canvas {
 	margin-top: 400px;
 	font-size: 18px;
 	width: 800px;
-	color: #b0b0b0;
+	color: #a0a0a0;
+	text-align: center;
 }
 
 #hud {

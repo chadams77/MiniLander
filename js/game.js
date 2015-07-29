@@ -160,6 +160,28 @@ var initLevel = function (no)
             initShip(400, 50, 6);
             fuel = 20;
             break;
+        case 8:
+            addPlanet(J_CLASS, 400 + Math.cos(Math.PI*2/3) * 150, 400 + Math.sin(Math.PI*2/3) * 150, 85, [Math.PI+Math.PI/4]);
+            addPlanet(J_CLASS, 400 + Math.cos(Math.PI*2/3*2) * 150, 400 + Math.sin(Math.PI*2/3*2) * 150, 85, [Math.PI+Math.PI/4]);
+            addPlanet(J_CLASS, 400 + Math.cos(Math.PI*2) * 150, 400 + Math.sin(Math.PI*2) * 150, 85, [Math.PI+Math.PI/4]);
+            initShip(400, 400, 6);
+            fuel = 6;
+            break;           
+        case 9:
+            addPlanet(B_HOLE, 400, 300, 15, [Math.PI+Math.PI/4]);
+            addPlanet(B_HOLE, 400, 400, 15, [Math.PI/4]);
+            addPlanet(B_HOLE, 400, 500, 15, [Math.PI+Math.PI/4]);
+            initShip(400, 50, 6);
+            fuel = 10;
+            break;
+        case 10:
+            fuel = 5;
+            initShip(400, 50, 6);
+            var flags = [];
+            for (var i=0; i<5; i++)
+                flags.push(i/5*Math.PI*2);
+            addPlanet(B_HOLE, 400, 400, 20, flags);
+            break;
     };   
 
     winTime = null;
@@ -683,10 +705,13 @@ GAME.render = function ( delta, realDelta )
             SFX.win.play();
 
             won = true;
-            $('<div class="message success">Success!<br>Fuel used: ' + (Math.floor((initFuel - fuel)*100) / 100) + 's<br><span class="button" id="next_level">Next level</span></div>').appendTo($(document.body));
-            $('#next_level').click(function(){
-                initLevel(levelNo+1);
-            });
+            $('<div class="message success">Success!<br>Fuel used: ' + (Math.floor((initFuel - fuel)*100) / 100) + 's<br>' + (levelNo < 10 ? '<span class="button" id="next_level">Next level</span></div>' : '')).appendTo($(document.body));
+            if (levelNo < 10)
+            {
+                $('#next_level').click(function(){
+                    initLevel(levelNo+1);
+                });
+            }
         }
     }
 
