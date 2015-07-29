@@ -7,8 +7,8 @@ Copy index.html, js/, sfx/, css/ to a web accessible folder and launch index.htm
 Controls
 ========
 
-Mouse drag near rod - Turn rod
+Move mouse   - Rotate ship
 
-Mouse wheel         - Reel in
+Left button  - Full thrust
 
-Hold space          - Let out line
+Right button - Half thrust
