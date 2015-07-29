@@ -24,6 +24,19 @@ body > canvas {
 	margin-top: -400px;
 }
 
+#footer {
+	position: absolute;
+	display: block;
+	left: 50%;
+	top: 50%;
+	padding-top: 5px;
+	margin-left: -400px;
+	margin-top: 400px;
+	font-size: 18px;
+	width: 800px;
+	color: #b0b0b0;
+}
+
 #hud {
 	position: absolute;
 	display: block;
